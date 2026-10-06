@@ -1,0 +1,72 @@
+{
+  "name": "hydrate-buddy",
+  "version": "1.0.8",
+  "description": "A pixel-art desktop companion who reminds you to drink water every 45 minutes between 10:00 and 23:00 IST.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "prepare-assets": "node scripts/remove-bg.js",
+    "make-icon": "node scripts/make-icon.js",
+    "make-gif": "node scripts/make-gif.js",
+    "autostart:enable": "node scripts/install-autostart.js",
+    "autostart:disable": "node scripts/uninstall-autostart.js",
+    "dist": "electron-builder --win nsis"
+  },
+  "keywords": [
+    "electron",
+    "desktop-pet",
+    "water-reminder",
+    "hydration",
+    "pixel-art"
+  ],
+  "author": "sharada-dev",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sharada-dev/hydrate-buddy.git"
+  },
+  "homepage": "https://github.com/sharada-dev/hydrate-buddy#readme",
+  "devDependencies": {
+    "electron": "^33.2.0",
+    "electron-builder": "^25.1.8",
+    "gifenc": "^1.0.3",
+    "jimp": "0.22.12"
+  },
+  "build": {
+    "appId": "com.sharadadev.hydratebuddy",
+    "productName": "Hydrate Buddy",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "renderer/**/*",
+      "assets/idle.png",
+      "assets/drinking.png",
+      "assets/broom.png",
+      "assets/broom_left.png",
+      "assets/crying.png",
+      "assets/sad.png",
+      "assets/tray.png",
+      "assets/characters/**/*",
+      "!assets/characters/**/raw/**"
+    ],
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "build/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Hydrate Buddy",
+      "artifactName": "HydrateBuddy-Setup-${version}.${ext}"
+    }
+  }
+}

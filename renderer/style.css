@@ -1,0 +1,427 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  overflow: hidden;
+  cursor: default;
+}
+
+#stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: visible !important;
+}
+
+/* -------------------------------------------------------------- character */
+#pet {
+  position: absolute;
+  right: 18px;
+  bottom: 0;
+  width: 155px;
+  height: 272px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  transition: transform 1.15s cubic-bezier(0.22, 0.61, 0.36, 1), opacity 0.4s ease;
+  transform: translateX(0);
+  opacity: 1;
+  filter: drop-shadow(0 6px 6px rgba(0, 0, 0, 0.28));
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+/* Off to the right, ready to walk in. */
+#pet.offstage {
+  transform: translateX(230px);
+  opacity: 0;
+}
+
+/* A gentle up/down bob while she is moving. */
+#pet.walking {
+  animation: walk-bob 0.36s steps(2, end) infinite;
+}
+
+@keyframes walk-bob {
+  0%,
+  100% {
+    margin-bottom: 0;
+  }
+  50% {
+    margin-bottom: 7px;
+  }
+}
+
+#pet img {
+  height: 100%;
+  width: auto;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+/* She turns to face the way she's walking (right, as she exits). sad.png is pre-oriented facing right */
+#pet.face-right img:not(#sprite-sad) {
+  transform: scaleX(-1);
+}
+
+/* Little happy hop when she confirms. */
+#pet.celebrate {
+  animation: happy-hop 0.5s ease-in-out 2;
+}
+
+@keyframes happy-hop {
+  0%,
+  100% {
+    transform: translateX(0) translateY(0);
+  }
+  30% {
+    transform: translateX(0) translateY(-18px);
+  }
+  60% {
+    transform: translateX(0) translateY(0);
+  }
+}
+
+/* -------------------------------------------------- Harry Potter broom flight on rails */
+#pet.in-flight {
+  position: fixed !important;
+  right: auto !important;
+  bottom: auto !important;
+  transition: none !important;
+  animation: none !important;
+  z-index: 10 !important;
+  pointer-events: none !important;
+  will-change: transform, left, top;
+}
+
+/* -------------------------------------------------- Sitting & crying */
+#pet.crying {
+  transform: translateX(0);
+  animation: sob-tremor 0.36s ease-in-out infinite;
+}
+
+#pet.crying #sprite-crying {
+  height: 76%;
+  margin-bottom: 0;
+}
+
+@keyframes sob-tremor {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(3px);
+  }
+}
+
+/* -------------------------------------------------- Left side exit */
+#pet.exit-left {
+  transition: transform 1.25s cubic-bezier(0.22, 0.61, 0.36, 1), opacity 0.4s ease 0.85s;
+  transform: translateX(-340px);
+  opacity: 0;
+}
+
+#pet.face-left img {
+  transform: scaleX(1);
+}
+
+/* -------------------------------------------------- Dull / sad walk back to origin (right side) */
+#pet.dull-exit {
+  transition: transform 2.0s cubic-bezier(0.38, 0, 0.24, 1), opacity 0.55s ease 1.45s, filter 0.5s ease;
+  transform: translateX(240px);
+  opacity: 0;
+  filter: grayscale(0.55) brightness(0.82) drop-shadow(0 4px 4px rgba(0, 0, 0, 0.2));
+  animation: dull-walk-bob 0.52s ease-in-out infinite;
+}
+
+@keyframes dull-walk-bob {
+  0%, 100% {
+    margin-bottom: 0;
+  }
+  50% {
+    margin-bottom: 3px;
+  }
+}
+
+/* -------------------------------------------------- Magic particles & tears */
+#magic-layer {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  overflow: visible !important;
+  z-index: 8;
+}
+
+.magic-spark {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(circle, #fff9c4 20%, #ffd54f 60%, rgba(255, 179, 0, 0) 100%);
+  filter: drop-shadow(0 0 6px #ffca28);
+  animation: spark-fade var(--dur) ease-out forwards;
+}
+
+@keyframes spark-fade {
+  0% {
+    transform: translate(0, 0) scale(1.3);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--vx), var(--vy)) scale(0.2);
+    opacity: 0;
+  }
+}
+
+/* -------------------------------------------------- Broom feather sparkles */
+.feather-sparkle {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(circle, #ffffff 15%, #ffd700 55%, rgba(255, 152, 0, 0) 100%);
+  filter: drop-shadow(0 0 6px #ffb300);
+  animation: feather-sparkle-drop var(--dur) cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes feather-sparkle-drop {
+  0% {
+    transform: translate(0, 0) scale(1.3) rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.95;
+    transform: translate(var(--vx), calc(var(--vy) * 0.5)) scale(1.0) rotate(180deg);
+  }
+  100% {
+    transform: translate(var(--vx), var(--vy)) scale(0.2) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+.falling-tear {
+  position: absolute;
+  width: 8px;
+  height: 13px;
+  background: linear-gradient(to bottom, #e3f2fd, #42a5f5);
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  box-shadow: 0 0 5px rgba(66, 165, 245, 0.8);
+  pointer-events: none;
+  animation: tear-drop var(--dur) cubic-bezier(0.55, 0.055, 0.675, 0.19) forwards;
+}
+
+@keyframes tear-drop {
+  0% {
+    transform: translateY(0) scale(0.85);
+    opacity: 1;
+  }
+  85% {
+    transform: translateY(var(--dist)) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(calc(var(--dist) + 4px)) scale(1.6, 0.35);
+    opacity: 0;
+  }
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* ----------------------------------------------------------- clean floating greeting & buttons (no boxes or shapes) */
+#bubble {
+  position: absolute;
+  top: 36px;
+  left: 10px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.28s cubic-bezier(0.18, 0.89, 0.32, 1.28), opacity 0.2s ease;
+  z-index: 20;
+  pointer-events: auto;
+}
+
+#bubble.hidden {
+  display: flex !important;
+  opacity: 0;
+  transform: scale(0.6);
+  pointer-events: none;
+}
+
+#bubble-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+#bubble-text {
+  font-family: 'Press Start 2P', 'Courier New', monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #ffffff;
+  text-shadow:
+    -2px -2px 0 #1c1c1c,
+    2px -2px 0 #1c1c1c,
+    -2px 2px 0 #1c1c1c,
+    2px 2px 0 #1c1c1c,
+    0 4px 6px rgba(0, 0, 0, 0.45);
+  text-transform: uppercase;
+  text-align: center;
+  letter-spacing: 0.5px;
+}
+
+/* ----------------------------------------------------------- avatar context menu */
+#avatar-menu {
+  position: absolute;
+  bottom: 110px;
+  right: 175px;
+  background: #ffffff;
+  border: 3px solid #1c1c1c;
+  border-radius: 8px;
+  padding: 6px;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.22);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  z-index: 100;
+  pointer-events: auto;
+  animation: menu-pop 0.18s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+}
+
+#avatar-menu.hidden {
+  display: none !important;
+}
+
+@keyframes menu-pop {
+  0% {
+    transform: scale(0.65);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f8fafc;
+  border: 2px solid #cbd5e1;
+  border-radius: 5px;
+  padding: 8px 12px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  color: #1e293b;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s, border-color 0.15s, transform 0.1s;
+}
+
+.menu-item:hover {
+  background: #e0f2fe;
+  border-color: #38bdf8;
+  transform: translateX(-2px);
+}
+
+.menu-item:active {
+  transform: scale(0.96);
+}
+
+.menu-icon {
+  font-size: 13px;
+}
+
+/* ------------------------------------------------------------------ buttons */
+#buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.btn {
+  font-family: 'Press Start 2P', 'Courier New', monospace;
+  font-size: 9px;
+  letter-spacing: 0.5px;
+  padding: 9px 10px;
+  border: 3px solid #1c1c1c;
+  border-radius: 4px;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: transform 0.05s ease, box-shadow 0.05s ease;
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.35);
+}
+
+.btn:active {
+  transform: translate(3px, 3px);
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0.35);
+}
+
+.btn-yes {
+  background: #37c24a;
+  color: #fff;
+}
+
+.btn-yes:hover {
+  background: #2fae41;
+}
+
+.btn-snooze {
+  background: #fdfdf7;
+  color: #1c1c1c;
+}
+
+.btn-snooze:hover {
+  background: #ececec;
+}
+
+/* ---------------------------------------------------------------- confetti */
+#confetti {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.confetti-piece {
+  position: absolute;
+  top: -20px;
+  font-size: 16px;
+  will-change: transform, opacity;
+  animation: confetti-fall var(--dur) linear forwards;
+}
+
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(var(--fall)) rotate(var(--spin));
+    opacity: 0;
+  }
+}

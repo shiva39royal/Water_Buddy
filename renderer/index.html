@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Security-Policy"
+          content="default-src 'self'; img-src 'self' data: file:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com;" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="stage">
+      <div id="confetti"></div>
+
+      <div id="bubble" class="hidden">
+        <div id="bubble-content">
+          <p id="bubble-text"></p>
+          <div id="buttons">
+            <button id="yes-btn" class="btn btn-yes">YES, I DRANK</button>
+            <button id="snooze-btn" class="btn btn-snooze">SNOOZE</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="magic-layer"></div>
+
+      <div id="pet" class="offstage" title="Right-click for options">
+        <img id="sprite-idle" src="../assets/idle.png" alt="" draggable="false" />
+        <img id="sprite-drinking" class="hidden" src="../assets/drinking.png" alt="" draggable="false" />
+        <img id="sprite-broom" class="hidden" src="../assets/broom.png" alt="" draggable="false" />
+        <img id="sprite-broom-left" class="hidden" src="../assets/broom_left.png" alt="" draggable="false" />
+        <img id="sprite-crying" class="hidden" src="../assets/crying.png" alt="" draggable="false" />
+        <img id="sprite-sad" class="hidden" src="../assets/sad.png" alt="" draggable="false" />
+      </div>
+
+      <!-- Right-click avatar context menu -->
+      <div id="avatar-menu" class="hidden">
+        <button id="menu-change-interval" class="menu-item">
+          <span class="menu-icon">⏱️</span>
+          <span class="menu-label">Reminder Interval</span>
+        </button>
+        <button id="menu-change-avatar" class="menu-item">
+          <span class="menu-icon">👤</span>
+          <span class="menu-label">Change Avatar</span>
+        </button>
+        <button id="menu-change-name" class="menu-item">
+          <span class="menu-icon">✏️</span>
+          <span class="menu-label">Change Name</span>
+        </button>
+      </div>
+    </div>
+
+    <script src="renderer.js"></script>
+  </body>
+</html>
